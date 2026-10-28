@@ -1,0 +1,17 @@
+CREATE DATABASE IF NOT EXISTS java_banking;
+USE java_banking;
+CREATE TABLE IF NOT EXISTS accounts (
+ id BIGINT PRIMARY KEY AUTO_INCREMENT, account_no VARCHAR(20) NOT NULL UNIQUE,
+ holder_name VARCHAR(120) NOT NULL, email VARCHAR(150), phone VARCHAR(20),
+ balance DECIMAL(15,2) NOT NULL DEFAULT 0.00, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS transactions (
+ id BIGINT PRIMARY KEY AUTO_INCREMENT, account_id BIGINT NOT NULL,
+ transaction_type ENUM('DEPOSIT','WITHDRAWAL') NOT NULL, amount DECIMAL(15,2) NOT NULL,
+ balance_after DECIMAL(15,2) NOT NULL, note VARCHAR(255),
+ created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ CONSTRAINT fk_transactions_account FOREIGN KEY(account_id) REFERENCES accounts(id) ON DELETE CASCADE
+);
+INSERT INTO accounts(account_no,holder_name,email,phone,balance)
+VALUES('1001001','Demo Customer','demo@example.com','9999999999',5000.00)
+ON DUPLICATE KEY UPDATE account_no=VALUES(account_no);
